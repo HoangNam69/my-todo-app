@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .App {
   text-align: center;
 }
@@ -19,6 +25,79 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+.wrap {
+  width: 100%;
+  height: 100vh;
+  background-color: #222;
+  padding-top: 24px;
+}
+.app {
+  margin: 0 auto;
+  width: calc(100% / 2);
+  height: fit-content;
+}
+
+.header-container {
+  background-color: rgb(5, 219, 148);
+}
+
+.header-title {
+  color: #ffffff;
+  padding: 16px;
+  margin: 0;
+  
+}
+
+.add-todo {
+  display: flex;
+  justify-content: space-between;
+
+
+}
+
+.add-todo .add-todo-input {
+  flex: 1;
+  font-size: 24px;
+  padding: 6px;
+  outline: none;
+  border: none;
+  background: rgb(61, 230, 173);
+  color: azure; 
+}
+
+.add-todo .add-todo-input::placeholder {
+  color: azure;
+  font-weight: bold;
+}
+
+.add-todo .add-todo-btn {
+  font-size: 24px;
+  padding: 0 14px;
+  outline: none;
+  border: none;
+  background: rgb(14, 194, 134);
+  color: aliceblue;
+  font-weight: bold;
+}
+
+.add-todo .add-todo-btn:hover {
+  background: rgb(30, 235, 166);
+  cursor: pointer;
+}
+
+.add-todo .add-todo-btn:active {
+  background: rgb(14, 194, 134);
+}
+
+.to-do-list {
+  color: #ffffff;
+  list-style-type: none;
 }
