@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./layouts/Header.js";
 import AddTodo from "./AddTodo.js";
 import ToDos from "./Todos.js";
+import Uuid from 'uuid'
 
 class TodoApp extends React.Component {
   state = {
@@ -23,7 +24,7 @@ class TodoApp extends React.Component {
       },
     ],
   };
-// Xu ly thay doi gia tri field completed khi user click to checkbox input
+  // Xu ly thay doi gia tri field completed khi user click to checkbox input
   handleCheckboxChange = (id) => {
     this.setState({
       todos: this.state.todos.map(todo => {
@@ -39,9 +40,22 @@ class TodoApp extends React.Component {
   deleteToDo = id => {
     this.setState({
       todos: [
-        ...this.state.todos.filter((todo)=>{
+        ...this.state.todos.filter((todo) => {
           return todo.id !== id;
         })
+      ]
+    })
+  }
+
+  addToDo = title => {
+    const newToDo = {
+      id: Uuid.v4(),
+      title: title,
+      completed: false
+    }
+    this.setState({
+      todos: [
+        ...this.state.todos, newToDo
       ]
     })
   }
@@ -51,8 +65,8 @@ class TodoApp extends React.Component {
       <div className="wrap">
         <div className="app">
           <Header />
-          <AddTodo />
-          <ToDos todos={this.state.todos} handleChange={this.handleCheckboxChange} deleteToDo={this.deleteToDo}/>
+          <AddTodo addToDo={this.addToDo} />
+          <ToDos todos={this.state.todos} handleChange={this.handleCheckboxChange} deleteToDo={this.deleteToDo} />
         </div>
       </div>
     );
