@@ -101,3 +101,30 @@
   color: #ffffff;
   list-style-type: none;
 }
+
+.to-do-list .to-do-item {
+  padding: 10px 18px;
+  border: 1px solid rgb(14, 194, 134);
+  display: flex;
+  align-items: center;
+}
+
+.to-do-list .to-do-item>input {
+  margin-right: 14px;
+}
+
+.completed {
+  font-style: italic;
+  color: #ff6804;
+  text-decoration: line-through;
+}
+
+.btn-style {
+  padding: 4px 8px;
+  background-color: #ff6804;
+  font-weight: bolder;
+  border-radius: 50%;
+  outline: none ;
+  cursor: pointer;
+  margin-left: auto;
+}
