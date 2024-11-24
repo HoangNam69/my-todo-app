@@ -1,76 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./layouts/Header.js";
 import AddTodo from "./AddTodo.js";
 import ToDos from "./Todos.js";
 import Uuid from 'uuid'
 
-class TodoApp extends React.Component {
-  state = {
-    todos: [
-      {
-        id: 1,
-        title: "Setup development environment",
-        completed: true,
-      },
-      {
-        id: 2,
-        title: "Develop website and add content",
-        completed: false,
-      },
-      {
-        id: 3,
-        title: "Deploy to live server",
-        completed: false,
-      },
-    ],
-  };
-  // Xu ly thay doi gia tri field completed khi user click to checkbox input
-  handleCheckboxChange = (id) => {
-    this.setState({
-      todos: this.state.todos.map(todo => {
-        if (todo.id === id) {
-          todo.completed = !todo.completed;
-        }
-        return todo;
-      })
-    });
-  }
+// Hooks khong duoc su dung trong cac class component
+// Phai import React de co the su dung syntax jsx
 
-  // dung toan tu spread de lay duco danh sach todos hien tai
-  deleteToDo = id => {
-    this.setState({
-      todos: [
-        ...this.state.todos.filter((todo) => {
-          return todo.id !== id;
-        })
-      ]
-    })
-  }
+function TodoApp() {
+  const [todos, setTodos] = useState([{
+    id: 1,
+    title: "Setup development environment",
+    completed: true,
+  },
+  {
+    id: 2,
+    title: "Develop website and add content",
+    completed: false,
+  },
+  {
+    id: 3,
+    title: "Deploy to live server",
+    completed: false,
+  }])
 
-  addToDo = title => {
+  var handleCheckboxChange = (id) => {
+    setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo))
+  }
+  var addToDo = title => {
     const newToDo = {
       id: Uuid.v4(),
       title: title,
       completed: false
     }
-    this.setState({
-      todos: [
-        ...this.state.todos, newToDo
-      ]
-    })
+    setTodos([...todos, newToDo])
   }
 
-  render() {
-    return (
-      <div className="wrap">
-        <div className="app">
-          <Header />
-          <AddTodo addToDo={this.addToDo} />
-          <ToDos todos={this.state.todos} handleChange={this.handleCheckboxChange} deleteToDo={this.deleteToDo} />
-        </div>
+  var deleteToDo = id => setTodos([...todos.filter(todo => todo.id !== id)]);
+
+  return (
+    <div className="wrap">
+      <div className="app">
+        <Header />
+        <AddTodo addToDo={addToDo} />
+        <ToDos todos={todos} handleChange={handleCheckboxChange} deleteToDo={deleteToDo} />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default TodoApp;
