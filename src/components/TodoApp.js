@@ -2,51 +2,76 @@ import React, { useState } from "react";
 import Header from "./layouts/Header.js";
 import AddTodo from "./AddTodo.js";
 import ToDos from "./Todos.js";
-import Uuid from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
+import axios from 'axios'
 
 // Hooks khong duoc su dung trong cac class component
 // Phai import React de co the su dung syntax jsx
-
-function TodoApp() {
-  const [todos, setTodos] = useState([{
-    id: 1,
-    title: "Setup development environment",
-    completed: true,
-  },
-  {
-    id: 2,
-    title: "Develop website and add content",
-    completed: false,
-  },
-  {
-    id: 3,
-    title: "Deploy to live server",
-    completed: false,
-  }])
-
-  var handleCheckboxChange = (id) => {
-    setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo))
+class TodoApp extends React.Component {
+  state = {
+    todos: []
+  };
+  // Xu ly thay doi gia tri field completed khi user click to checkbox input
+  handleCheckboxChange = (id) => {
+    this.setState({
+      todos: this.state.todos.map(todo => {
+        if (todo.id === id) {
+          todo.completed = !todo.completed;
+        }
+        return todo;
+      })
+    });
   }
-  var addToDo = title => {
+
+  // dung toan tu spread de lay duco danh sach todos hien tai
+  deleteToDo = id => {
+    axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`).then(res => {
+      this.setState({
+        todos:[
+          ...this.state.todos.filter(todo => todo.id !== id)
+        ]
+      })
+    })
+  }
+
+  addToDo = title => {
     const newToDo = {
-      id: Uuid.v4(),
+      // id: uuidv4(),
       title: title,
       completed: false
     }
-    setTodos([...todos, newToDo])
+
+    axios.post("https://jsonplaceholder.typicode.com/todos", newToDo).then(res => {
+      console.log(res.data)
+      this.setState({
+        todos: [...this.state.todos, res.data]
+      })
+    })
   }
 
-  var deleteToDo = id => setTodos([...todos.filter(todo => todo.id !== id)]);
+  componentDidMount() {
+    // Cấu hình
+    const config = {
+      params: {
+        _limit: 5 // số data row được trả về
+      }
+    }
+    axios.get("https://jsonplaceholder.typicode.com/todos", config)
+      .then(res => this.setState({ todos: res.data }))
+      .catch(error => console.log(error))
+  }
 
-  return (
-    <div className="wrap">
-      <div className="app">
-        <Header />
-        <AddTodo addToDo={addToDo} />
-        <ToDos todos={todos} handleChange={handleCheckboxChange} deleteToDo={deleteToDo} />
+  render() {
+    return (
+      <div className="wrap">
+        <div className="app">
+          <Header />
+          <AddTodo addToDo={this.addToDo} />
+          <ToDos todos={this.state.todos} handleChange={this.handleCheckboxChange} deleteToDo={this.deleteToDo} />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default TodoApp;
