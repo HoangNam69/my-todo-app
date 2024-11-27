@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./layouts/Header.js";
 import AddTodo from "./AddTodo.js";
 import ToDos from "./Todos.js";
@@ -7,14 +7,14 @@ import axios from 'axios'
 
 // Hooks khong duoc su dung trong cac class component
 // Phai import React de co the su dung syntax jsx
-class TodoApp extends React.Component {
-  state = {
+function TodoApp() {
+  const [state, setState] = useState({
     todos: []
-  };
+  });
   // Xu ly thay doi gia tri field completed khi user click to checkbox input
-  handleCheckboxChange = (id) => {
-    this.setState({
-      todos: this.state.todos.map(todo => {
+  const handleCheckboxChange = (id) => {
+    setState({
+      todos: state.todos.map(todo => {
         if (todo.id === id) {
           todo.completed = !todo.completed;
         }
@@ -24,32 +24,31 @@ class TodoApp extends React.Component {
   }
 
   // dung toan tu spread de lay duco danh sach todos hien tai
-  deleteToDo = id => {
+  const deleteToDo = id => {
     axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`).then(res => {
-      this.setState({
-        todos:[
-          ...this.state.todos.filter(todo => todo.id !== id)
+      setState({
+        todos: [
+          ...state.todos.filter(todo => todo.id !== id)
         ]
       })
     })
   }
 
-  addToDo = title => {
+  const addToDo = title => {
     const newToDo = {
       // id: uuidv4(),
       title: title,
       completed: false
     }
-
     axios.post("https://jsonplaceholder.typicode.com/todos", newToDo).then(res => {
       console.log(res.data)
-      this.setState({
-        todos: [...this.state.todos, res.data]
+      setState({
+        todos: [...state.todos, res.data]
       })
     })
   }
 
-  componentDidMount() {
+  useEffect(() => {
     // Cấu hình
     const config = {
       params: {
@@ -57,21 +56,19 @@ class TodoApp extends React.Component {
       }
     }
     axios.get("https://jsonplaceholder.typicode.com/todos", config)
-      .then(res => this.setState({ todos: res.data }))
+      .then(res => setState({ todos: res.data }))
       .catch(error => console.log(error))
-  }
+  }, [])
 
-  render() {
-    return (
-      <div className="wrap">
-        <div className="app">
-          <Header />
-          <AddTodo addToDo={this.addToDo} />
-          <ToDos todos={this.state.todos} handleChange={this.handleCheckboxChange} deleteToDo={this.deleteToDo} />
-        </div>
+  return (
+    <div className="wrap">
+      <div className="app">
+        <Header />
+        <AddTodo addToDo={addToDo} />
+        <ToDos todos={state.todos} handleChange={handleCheckboxChange} deleteToDo={deleteToDo} />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default TodoApp;
