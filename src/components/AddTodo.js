@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 function AddTodo(props) {
     const [title, setTitle] = useState("")
     
+    // Xử lý cập nhật giá trị cho field input
     const onInputChange = e => {
         setTitle(e.target.value)
     }
 
+    // Xử lý lấy props được truyền từ TodoApp để hoàn thành thao tác thêm mới todo
     const addToDo = e => {
         e.preventDefault();
         props.addToDo(title);
